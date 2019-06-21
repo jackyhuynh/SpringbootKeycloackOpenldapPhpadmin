@@ -3,15 +3,20 @@ package com.mycompany.simpleservice.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
 public class SimpleServiceController {
+
+    @Autowired
+    private HttpServletRequest request;
 
     @ApiOperation(value = "Get string from public endpoint")
     @ApiResponses(value = {
@@ -29,8 +34,9 @@ public class SimpleServiceController {
             @ApiResponse(code = 403, message = "Forbidden")
     })
     @GetMapping("/private")
-    public String getPrivateString(Principal principal) {
-        return String.format("%s, it is private.\n", principal.getName());
+    public String getPrivateString() {
+        Principal user = request.getUserPrincipal();
+        return String.format("it is private.");
     }
 
 }
