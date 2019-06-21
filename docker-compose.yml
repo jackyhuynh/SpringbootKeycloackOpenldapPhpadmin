@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  mysql:
+    image: mysql:5.7.26
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root_password
+
+  keycloak:
+    image: jboss/keycloak:6.0.1
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=mysql
+      - DB_ADDR=mysql
+      - DB_USER=keycloak         # The jboss/keycloak docker documentation says that 'keycloak' is the default value for
+      - DB_PASSWORD=password     # DB_USER and 'password' the default for DB_PASSWORD. However, I needed to explicitly set
+      - JDBC_PARAMS=useSSL=false # them, otherwise I was not able to run the version 6.0.1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  ldap-host:
+    image: osixia/openldap:1.2.4
+    container_name: ldap-host
+    environment:
+      - LDAP_ORGANISATION="MyCompany Inc."
+      - LDAP_DOMAIN=mycompany.com
+    ports:
+      - "389:389"
+
+  phpldapadmin-service:
+    image: osixia/phpldapadmin:0.7.2
+    container_name: phpldapadmin-service
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap-host
+    ports:
+      - "6443:443"
+    depends_on:
+      - ldap-host
+#a9386772-c437-49af-a3f7-5f9407b24bbd
+
+
