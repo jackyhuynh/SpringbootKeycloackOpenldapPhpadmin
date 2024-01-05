@@ -2,7 +2,7 @@ version: '2'
 
 services:
   mysql:
-    image: mysql:5.7.26
+    image: mysql:latest
     container_name: mysql
     ports:
       - "3306:3306"
@@ -13,7 +13,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root_password
 
   keycloak:
-    image: jboss/keycloak:6.0.1
+    image: jboss/keycloak:latest
     container_name: keycloak
     environment:
       - KEYCLOAK_USER=admin
@@ -29,7 +29,7 @@ services:
       - mysql
 
   ldap-host:
-    image: osixia/openldap:1.2.4
+    image: osixia/openldap:latest
     container_name: ldap-host
     environment:
       - LDAP_ORGANISATION="MyCompany Inc."
@@ -38,7 +38,7 @@ services:
       - "389:389"
 
   phpldapadmin-service:
-    image: osixia/phpldapadmin:0.7.2
+    image: osixia/phpldapadmin:latest
     container_name: phpldapadmin-service
     environment:
       - PHPLDAPADMIN_LDAP_HOSTS=ldap-host
@@ -47,5 +47,3 @@ services:
     depends_on:
       - ldap-host
 #a9386772-c437-49af-a3f7-5f9407b24bbd
-
-
